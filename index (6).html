@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+<!-- ============================================================
+     EDIT: your name + one-line description (browser tab + Google).
+============================================================ -->
+<title>Your Name — Control Systems & Robotics Researcher</title>
+<meta name="description" content="PhD student researching soft robotics, computer vision, and control theory." />
+
+<!-- Fonts: Spectral (elegant serif headings) + Archivo (clean body) -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Spectral:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+<style>
+/* ============================================================
+   THEME — change colors here to recolor the whole site
+============================================================ */
+:root{
+  --bg:        #ffffff;
+  --bg-soft:   #f7f8f8;
+  --line:      rgba(20,32,38,0.11);
+  --ink:       #18222a;
+  --muted:     #515c64;
+  --faint:     #8a949b;
+  --accent:    #0f766e;            /* deep teal */
+  --accent-soft:rgba(15,118,110,0.10);
+  --maxw: 1040px;
+  --ease: cubic-bezier(.22,.61,.36,1);
+}
+*{ box-sizing:border-box; margin:0; padding:0; }
+html{ scroll-behavior:smooth; scroll-padding-top:84px; }
+body{
+  background:var(--bg); color:var(--ink);
+  font-family:'Archivo', sans-serif; font-size:17px; line-height:1.7;
+  -webkit-font-smoothing:antialiased; overflow-x:hidden;
+}
+a{ color:inherit; text-decoration:none; }
+::selection{ background:var(--accent-soft); }
+.wrap{ max-width:var(--maxw); margin:0 auto; padding:0 30px; }
+
+.label{ font-size:.74rem; letter-spacing:.2em; text-transform:uppercase; font-weight:600; color:var(--accent); }
+h2.section-title{
+  font-family:'Spectral', serif; font-weight:600;
+  font-size:clamp(1.7rem, 3.6vw, 2.3rem); letter-spacing:-.01em; line-height:1.15;
+  margin:.55rem 0 2.2rem;
+}
+
+/* ---- NAVBAR ---- */
+nav{ position:fixed; top:0; left:0; right:0; z-index:100;
+  backdrop-filter:blur(10px); background:rgba(255,255,255,.82); border-bottom:1px solid var(--line); }
+nav .wrap{ display:flex; align-items:center; justify-content:space-between; height:66px; }
+.brand{ font-family:'Spectral', serif; font-weight:600; font-size:1.15rem; letter-spacing:-.01em; }
+.brand .accent{ color:var(--accent); }
+.nav-links{ display:flex; gap:1.7rem; align-items:center; }
+.nav-links a{ font-size:.92rem; color:var(--muted); transition:color .2s; }
+.nav-links a:hover{ color:var(--accent); }
+.nav-toggle{ display:none; background:none; border:1px solid var(--line); color:var(--ink);
+  font-size:.85rem; padding:.4rem .7rem; border-radius:6px; cursor:pointer; }
+
+/* ---- HERO ---- */
+header{ padding:140px 0 92px; }
+.hero{ display:grid; grid-template-columns:1.25fr .95fr; gap:50px; align-items:center; }
+.hero .eyebrow{ color:var(--accent); font-weight:600; font-size:.95rem; margin-bottom:1rem; }
+.hero h1{ font-family:'Spectral', serif; font-weight:600;
+  font-size:clamp(2.3rem, 5vw, 3.4rem); line-height:1.08; letter-spacing:-.02em; margin-bottom:1.1rem; }
+.hero h1 .accent{ color:var(--accent); }
+.hero .lead{ font-size:1.12rem; color:var(--muted); max-width:46ch; margin-bottom:1.7rem; }
+.hero-actions{ display:flex; gap:.8rem; flex-wrap:wrap; margin-bottom:1.6rem; }
+.btn{ font-size:.95rem; font-weight:500; padding:.72rem 1.25rem; border-radius:8px;
+  border:1px solid var(--line); transition:all .2s var(--ease); cursor:pointer;
+  display:inline-flex; align-items:center; gap:.5em; }
+.btn-primary{ background:var(--accent); color:#fff; border-color:var(--accent); }
+.btn-primary:hover{ filter:brightness(1.08); transform:translateY(-1px); }
+.btn-ghost:hover{ border-color:var(--accent); color:var(--accent); }
+.links{ display:flex; gap:1.3rem; flex-wrap:wrap; }
+.links a{ font-size:.92rem; color:var(--muted); transition:color .2s; border-bottom:1px solid transparent; }
+.links a:hover{ color:var(--accent); border-bottom-color:var(--accent); }
+
+/* ---- LIVE 3D SCENE ---- */
+.scene-section{ padding:64px 0 74px; text-align:center; }
+.scene-section .scene-wrap{ max-width:440px; margin:0 auto; }
+.scene-wrap{ position:relative; }
+#scene{ width:100%; aspect-ratio:1/1; cursor:grab; touch-action:none; }
+#scene:active{ cursor:grabbing; }
+#scene canvas{ display:block; width:100% !important; height:100% !important; border-radius:14px; }
+.scene-cap{ display:block; margin-top:1rem; font-family:'Spectral', serif; font-style:italic;
+  font-size:1.12rem; color:var(--ink); }
+.scene-hint{ display:block; margin-top:.25rem; font-size:.78rem; color:var(--faint); letter-spacing:.05em; }
+.scene-fallback{ display:flex; align-items:center; justify-content:center; width:100%; aspect-ratio:1/1;
+  border:1px dashed var(--line); border-radius:14px; color:var(--faint); font-size:.9rem; }
+
+/* ---- hero portrait ---- */
+.portrait{ aspect-ratio:4/5; border-radius:14px; overflow:hidden; border:1px solid var(--line);
+  background:var(--bg-soft); display:flex; align-items:center; justify-content:center;
+  color:var(--faint); font-size:.9rem; text-align:center; padding:20px;
+  box-shadow:0 24px 50px -28px rgba(20,32,38,.35); }
+.portrait img{ width:100%; height:100%; object-fit:cover; }
+
+/* ---- SECTIONS ---- */
+section{ padding:78px 0; }
+section.alt{ background:var(--bg-soft); border-top:1px solid var(--line); border-bottom:1px solid var(--line); }
+.about{ max-width:760px; }
+.about p{ color:var(--muted); margin-bottom:1.1rem; }
+.about p strong{ color:var(--ink); font-weight:600; }
+.facts{ display:flex; flex-wrap:wrap; gap:.5rem; margin-top:.4rem; }
+.fact{ font-size:.85rem; color:var(--muted); border:1px solid var(--line);
+  padding:.35rem .75rem; border-radius:100px; background:var(--bg); }
+.fact b{ color:var(--accent); font-weight:600; }
+
+.cards{ display:grid; grid-template-columns:repeat(3,1fr); gap:20px; }
+.card{ background:var(--bg); border:1px solid var(--line); border-radius:12px; padding:28px 26px;
+  transition:all .25s var(--ease); }
+.card:hover{ box-shadow:0 18px 38px -22px rgba(20,32,38,.35); transform:translateY(-3px); border-color:var(--accent); }
+.card .num{ font-size:.82rem; color:var(--accent); font-weight:600; }
+.card h3{ font-family:'Spectral', serif; font-weight:600; font-size:1.22rem; margin:.55rem 0; }
+.card p{ color:var(--muted); font-size:.97rem; }
+
+.filters{ display:flex; gap:.55rem; margin-bottom:1.7rem; flex-wrap:wrap; }
+.filter{ font-size:.85rem; color:var(--muted); border:1px solid var(--line);
+  padding:.35rem .9rem; border-radius:100px; background:var(--bg); cursor:pointer; transition:all .2s; }
+.filter:hover{ border-color:var(--accent); color:var(--accent); }
+.filter.active{ background:var(--accent); color:#fff; border-color:var(--accent); }
+.pub{ display:grid; grid-template-columns:64px 1fr; gap:22px; padding:22px 0; border-bottom:1px solid var(--line); }
+.pub:first-of-type{ border-top:1px solid var(--line); }
+.pub-year{ color:var(--accent); font-weight:600; font-size:.95rem; padding-top:3px; }
+.pub h3{ font-family:'Spectral', serif; font-weight:600; font-size:1.12rem; line-height:1.35; margin-bottom:.35rem; }
+.pub .authors{ color:var(--muted); font-size:.96rem; margin-bottom:.2rem; }
+.pub .authors .me{ color:var(--ink); font-weight:600; }
+.pub .venue{ color:var(--faint); font-size:.92rem; font-style:italic; }
+.pub-links{ display:flex; gap:.7rem; margin-top:.6rem; flex-wrap:wrap; }
+.pub-links a{ font-size:.82rem; color:var(--accent); border:1px solid var(--accent-soft);
+  padding:.22rem .6rem; border-radius:6px; transition:all .2s; }
+.pub-links a:hover{ background:var(--accent); color:#fff; }
+
+.tl-item{ display:grid; grid-template-columns:150px 1fr; gap:24px; padding:18px 0; border-bottom:1px solid var(--line); }
+.tl-item:first-of-type{ border-top:1px solid var(--line); }
+.tl-date{ color:var(--faint); font-size:.92rem; padding-top:2px; }
+.tl-body h3{ font-size:1.02rem; font-weight:600; margin-bottom:.2rem; }
+.tl-body p{ color:var(--muted); font-size:.96rem; }
+.tl-body .where{ color:var(--accent); font-weight:500; }
+
+.posts{ display:grid; grid-template-columns:repeat(2,1fr); gap:22px; }
+.post{ border:1px solid var(--line); border-radius:12px; padding:26px 28px; background:var(--bg);
+  transition:all .25s var(--ease); display:block; }
+.post:hover{ box-shadow:0 18px 38px -22px rgba(20,32,38,.35); transform:translateY(-3px); border-color:var(--accent); }
+.post .meta{ font-size:.82rem; color:var(--faint); margin-bottom:.5rem; }
+.post h3{ font-family:'Spectral', serif; font-weight:600; font-size:1.18rem; margin-bottom:.5rem; line-height:1.3; }
+.post p{ color:var(--muted); font-size:.96rem; }
+
+.contact-grid{ display:grid; grid-template-columns:1fr 1fr; gap:48px; align-items:center; }
+.contact-intro h2{ font-family:'Spectral', serif; font-weight:600;
+  font-size:clamp(1.6rem,3.4vw,2.2rem); line-height:1.15; margin-bottom:.9rem; }
+.contact-intro p{ color:var(--muted); }
+.contact-row{ display:flex; gap:1rem; padding:.85rem 0; border-bottom:1px solid var(--line); font-size:.98rem; }
+.contact-row:first-child{ border-top:1px solid var(--line); }
+.contact-row .k{ color:var(--faint); min-width:88px; }
+.contact-row a:hover{ color:var(--accent); }
+
+footer{ border-top:1px solid var(--line); padding:34px 0; }
+footer .wrap{ display:flex; justify-content:space-between; flex-wrap:wrap; gap:.8rem; font-size:.88rem; color:var(--faint); }
+footer a:hover{ color:var(--accent); }
+
+.reveal{ opacity:0; transform:translateY(20px); transition:opacity .7s var(--ease), transform .7s var(--ease); }
+.reveal.in{ opacity:1; transform:none; }
+
+/* ---- RESPONSIVE ---- */
+@media (max-width:820px){
+  .nav-links{ position:fixed; inset:66px 0 auto 0; flex-direction:column; gap:0;
+    background:var(--bg); border-bottom:1px solid var(--line); padding:.5rem 0;
+    transform:translateY(-130%); transition:transform .3s var(--ease); }
+  .nav-links.open{ transform:none; }
+  .nav-links a{ padding:.85rem 30px; width:100%; }
+  .nav-toggle{ display:block; }
+  .hero{ grid-template-columns:1fr; gap:30px; }
+  .portrait{ max-width:280px; margin:0 auto; order:-1; }
+  .scene-section .scene-wrap{ max-width:300px; }
+  .cards,.posts,.contact-grid{ grid-template-columns:1fr; }
+  .pub,.tl-item{ grid-template-columns:1fr; gap:4px; }
+  header{ padding:118px 0 60px; }
+}
+@media (prefers-reduced-motion: reduce){ .reveal{ transition:none; } }
+</style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav>
+  <div class="wrap">
+    <a href="#top" class="brand">Your<span class="accent">Name</span></a>
+    <button class="nav-toggle" onclick="document.getElementById('navlinks').classList.toggle('open')">Menu</button>
+    <div class="nav-links" id="navlinks">
+      <a href="#about">About</a><a href="#research">Research</a><a href="#publications">Publications</a>
+      <a href="#talks">Talks</a><a href="#news">News</a><a href="#blog">Blog</a><a href="#contact">Contact</a>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<header id="top">
+  <div class="wrap">
+    <div class="hero">
+      <div>
+        <p class="eyebrow reveal">PhD Student · [Department], [University]</p>          <!-- EDIT -->
+        <h1 class="reveal">Your <span class="accent">Name</span></h1>                   <!-- EDIT -->
+        <p class="lead reveal">I research <strong>soft robotics</strong>, <strong>computer vision</strong>, and <strong>control theory</strong> — developing systems that perceive their surroundings and act on them reliably under uncertainty.</p> <!-- EDIT -->
+        <div class="hero-actions reveal">
+          <a href="cv.pdf" class="btn btn-primary" download>Download CV</a>             <!-- drop a cv.pdf next to this file -->
+          <a href="mailto:you@university.edu" class="btn btn-ghost">Email me</a>         <!-- EDIT -->
+        </div>
+        <div class="links reveal">
+          <a href="https://scholar.google.com/" target="_blank">Google Scholar</a>
+          <a href="https://github.com/" target="_blank">GitHub</a>
+          <a href="https://orcid.org/" target="_blank">ORCID</a>
+          <a href="https://linkedin.com/" target="_blank">LinkedIn</a>
+        </div>
+      </div>
+
+      <!-- EDIT: replace placeholder with <img src="me.jpg" alt="Your Name"> -->
+      <div class="portrait reveal">Add your photo:<br>save it as me.jpg</div>
+    </div>
+  </div>
+</header>
+
+<!-- ============================================================
+     LIVE 3D FEATURE — "control network": connected nodes with signal
+     pulses flowing along the edges. Drawn entirely in code (Three.js).
+     Drag to rotate; it auto-spins on its own.
+============================================================ -->
+<section class="scene-section">
+  <div class="wrap">
+    <div class="scene-wrap reveal">
+      <div id="scene"><noscript><div class="scene-fallback">Enable JavaScript to view the 3D scene</div></noscript></div>
+      <span class="scene-cap">Everything is about Control</span>
+      <span class="scene-hint">drag to rotate</span>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about" class="alt">
+  <div class="wrap">
+    <span class="label reveal">About</span>
+    <h2 class="section-title reveal">Biography</h2>
+    <div class="about reveal">
+      <p>I am a PhD student in <strong>[Your Department]</strong> at <strong>[Your University]</strong>, advised by <strong>[Advisor Name]</strong>. My work brings together soft robotics, computer vision, and control theory to build machines that sense their environment and act on it dependably.</p>
+      <p>Previously, I completed my [B.Sc./M.Sc.] in [Field] at [University], where I worked on [brief topic]. I am broadly interested in how perception and feedback can make complex, uncertain systems both safe and capable.</p>
+      <div class="facts">
+        <span class="fact"><b>Field:</b> Robotics &amp; Control</span>
+        <span class="fact"><b>Since:</b> 2026</span>
+        <span class="fact"><b>Lab:</b> [Lab Name]</span>
+        <span class="fact"><b>Location:</b> [City, Country]</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- RESEARCH -->
+<section id="research">
+  <div class="wrap">
+    <span class="label reveal">Research</span>
+    <h2 class="section-title reveal">Research interests</h2>
+    <div class="cards">
+      <div class="card reveal"><span class="num">01</span><h3>Soft Robotics</h3><p>Designing compliant, deformable robots and the models needed to predict and command their motion.</p></div>
+      <div class="card reveal"><span class="num">02</span><h3>Computer Vision</h3><p>Perception pipelines that let machines understand their environment and close the loop in real time.</p></div>
+      <div class="card reveal"><span class="num">03</span><h3>Control Theory</h3><p>Feedback and optimization that turn perception into safe, stable, high-performance behaviour.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- PUBLICATIONS -->
+<section id="publications" class="alt">
+  <div class="wrap">
+    <span class="label reveal">Publications</span>
+    <h2 class="section-title reveal">Selected publications</h2>
+    <div class="filters reveal">
+      <span class="filter active" data-filter="all">All</span>
+      <span class="filter" data-filter="2026">2026</span>
+      <span class="filter" data-filter="2025">2025</span>
+    </div>
+    <div class="pub reveal" data-year="2026">
+      <div class="pub-year">2026</div>
+      <div>
+        <h3>Title of Your First Paper Goes Here</h3>
+        <p class="authors"><span class="me">Your Name</span>, A. Coauthor, B. Advisor</p>
+        <p class="venue">IEEE International Conference on Robotics and Automation (ICRA), 2026</p>
+        <div class="pub-links"><a href="#">PDF</a><a href="#">arXiv</a><a href="#">Code</a><a href="#">BibTeX</a></div>
+      </div>
+    </div>
+    <div class="pub reveal" data-year="2025">
+      <div class="pub-year">2025</div>
+      <div>
+        <h3>Another Paper Title — Replace With Your Real Work</h3>
+        <p class="authors">A. Coauthor, <span class="me">Your Name</span>, B. Advisor</p>
+        <p class="venue">IEEE Transactions on Robotics, 2025</p>
+        <div class="pub-links"><a href="#">PDF</a><a href="#">arXiv</a><a href="#">BibTeX</a></div>
+      </div>
+    </div>
+    <div class="pub reveal" data-year="2025">
+      <div class="pub-year">2025</div>
+      <div>
+        <h3>Workshop Paper or Preprint Title</h3>
+        <p class="authors"><span class="me">Your Name</span>, C. Collaborator</p>
+        <p class="venue">CVPR Workshop on Robot Perception, 2025</p>
+        <div class="pub-links"><a href="#">PDF</a><a href="#">Poster</a></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TALKS -->
+<section id="talks">
+  <div class="wrap">
+    <span class="label reveal">Talks</span>
+    <h2 class="section-title reveal">Talks &amp; presentations</h2>
+    <div class="reveal">
+      <div class="tl-item"><div class="tl-date">June 2026</div><div class="tl-body"><h3>Contributed Talk — &ldquo;Your Talk Title&rdquo;</h3><p><span class="where">IEEE ICRA 2026</span> · Vienna, Austria</p></div></div>
+      <div class="tl-item"><div class="tl-date">March 2026</div><div class="tl-body"><h3>Invited Seminar — Department of [X]</h3><p><span class="where">[University]</span> · Robotics &amp; Control Group</p></div></div>
+      <div class="tl-item"><div class="tl-date">November 2025</div><div class="tl-body"><h3>Poster — &ldquo;Project Title&rdquo;</h3><p><span class="where">NeurIPS Workshop</span> · San Diego, USA</p></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- NEWS -->
+<section id="news" class="alt">
+  <div class="wrap">
+    <span class="label reveal">News</span>
+    <h2 class="section-title reveal">Recent news</h2>
+    <div class="reveal">
+      <div class="tl-item"><div class="tl-date">May 2026</div><div class="tl-body"><p>Started my PhD at <span class="where">[University]</span>.</p></div></div>
+      <div class="tl-item"><div class="tl-date">April 2026</div><div class="tl-body"><p>Paper accepted to <span class="where">ICRA 2026</span>.</p></div></div>
+      <div class="tl-item"><div class="tl-date">January 2026</div><div class="tl-body"><p>Presented at the [Lab] reading group on vision-based control.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- BLOG & MEDIA -->
+<section id="blog">
+  <div class="wrap">
+    <span class="label reveal">Blog &amp; Media</span>
+    <h2 class="section-title reveal">Writing &amp; media</h2>
+    <div class="posts">
+      <a class="post reveal" href="#"><p class="meta">May 2026 · Article</p><h3>An Intuitive Guide to Feedback Control</h3><p>A friendly walkthrough of why feedback shows up everywhere, from thermostats to robots.</p></a>
+      <a class="post reveal" href="#"><p class="meta">April 2026 · Interview</p><h3>Talking Robotics on [Podcast Name]</h3><p>I joined the show to discuss my research and life as a first-year PhD student.</p></a>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact" class="alt">
+  <div class="wrap">
+    <span class="label reveal">Contact</span>
+    <div class="contact-grid">
+      <div class="contact-intro reveal">
+        <h2>Get in touch</h2>
+        <p>I&rsquo;m always happy to discuss research, collaborations, or questions about my work. Email is the best way to reach me.</p>
+      </div>
+      <div class="reveal">
+        <div class="contact-row"><span class="k">Email</span><a href="mailto:you@university.edu">you@university.edu</a></div>
+        <div class="contact-row"><span class="k">Office</span><span>Room 000, [Building], [University]</span></div>
+        <div class="contact-row"><span class="k">Scholar</span><a href="https://scholar.google.com/" target="_blank">Profile</a></div>
+        <div class="contact-row"><span class="k">GitHub</span><a href="https://github.com/" target="_blank">@yourhandle</a></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap"><span>© <span id="year"></span> Your Name</span><span>[Department] · [University]</span></div>
+</footer>
+
+<!-- Three.js (loaded from a CDN; works for anyone visiting your live site) -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+document.getElementById('year').textContent = new Date().getFullYear();
+
+/* fade-in on scroll */
+const io = new IntersectionObserver((es)=>{ es.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target);} }); },{threshold:.12});
+document.querySelectorAll('.reveal').forEach((el,i)=>{ el.style.transitionDelay=(i%5)*55+'ms'; io.observe(el); });
+
+/* publication year filter */
+document.querySelectorAll('.filter').forEach(f=>{
+  f.addEventListener('click', ()=>{
+    document.querySelectorAll('.filter').forEach(x=>x.classList.remove('active'));
+    f.classList.add('active');
+    const y=f.dataset.filter;
+    document.querySelectorAll('.pub').forEach(p=>{ p.style.display=(y==='all'||p.dataset.year===y)?'':'none'; });
+  });
+});
+
+/* mobile menu close on tap */
+document.querySelectorAll('.nav-links a').forEach(a=>a.addEventListener('click',()=>document.getElementById('navlinks').classList.remove('open')));
+
+/* ============================================================
+   LIVE 3D CONTROL-NETWORK SCENE
+============================================================ */
+(function(){
+  const el = document.getElementById('scene');
+  if(!el) return;
+  if(!window.THREE){ el.innerHTML='<div class="scene-fallback">3D scene could not load</div>'; return; }
+
+  const INK=0x18222a, TEAL=0x0f766e, AMBER=0xea580c;
+  const size = ()=> el.clientWidth || 360;
+
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 100);
+  camera.position.set(0, 0, 8.2);
+  const renderer = new THREE.WebGLRenderer({ antialias:true, alpha:true });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  renderer.setSize(size(), size());
+  el.appendChild(renderer.domElement);
+
+  const group = new THREE.Group();
+  scene.add(group);
+
+  /* geodesic structure (the "system") */
+  const ico = new THREE.IcosahedronGeometry(2.6, 1);
+
+  /* wireframe edges */
+  const edgesGeo = new THREE.EdgesGeometry(ico);
+  group.add(new THREE.LineSegments(edgesGeo,
+    new THREE.LineBasicMaterial({ color:TEAL, transparent:true, opacity:.45 })));
+
+  /* nodes at unique vertices */
+  const pos = ico.attributes.position, seen=new Set(), verts=[];
+  for(let i=0;i<pos.count;i++){
+    const v=new THREE.Vector3().fromBufferAttribute(pos,i);
+    const k=v.toArray().map(n=>n.toFixed(2)).join(',');
+    if(!seen.has(k)){ seen.add(k); verts.push(v); }
+  }
+  const nodeGeo=new THREE.SphereGeometry(.075,14,14);
+  const nodeMat=new THREE.MeshBasicMaterial({ color:INK });
+  verts.forEach(v=>{ const m=new THREE.Mesh(nodeGeo,nodeMat); m.position.copy(v); group.add(m); });
+
+  /* edge list for pulses */
+  const ep=edgesGeo.attributes.position, edges=[];
+  for(let i=0;i<ep.count;i+=2){
+    edges.push([ new THREE.Vector3().fromBufferAttribute(ep,i),
+                 new THREE.Vector3().fromBufferAttribute(ep,i+1) ]);
+  }
+
+  /* signal pulses travelling along edges */
+  const pulseGeo=new THREE.SphereGeometry(.11,12,12);
+  const pulses=[];
+  for(let i=0;i<16;i++){
+    const m=new THREE.Mesh(pulseGeo, new THREE.MeshBasicMaterial({ color: i%6===0?AMBER:TEAL }));
+    group.add(m);
+    pulses.push({ mesh:m, e:(Math.random()*edges.length)|0, t:Math.random(), s:.004+Math.random()*.006 });
+  }
+
+  /* drag to rotate */
+  let down=false, lx=0, ly=0;
+  el.addEventListener('pointerdown', e=>{ down=true; lx=e.clientX; ly=e.clientY; el.setPointerCapture(e.pointerId); });
+  el.addEventListener('pointerup',   ()=> down=false);
+  el.addEventListener('pointermove', e=>{
+    if(!down) return;
+    group.rotation.y += (e.clientX-lx)*.006;
+    group.rotation.x += (e.clientY-ly)*.006;
+    lx=e.clientX; ly=e.clientY;
+  });
+
+  function resize(){ const s=size(); renderer.setSize(s,s); camera.updateProjectionMatrix(); }
+  window.addEventListener('resize', resize);
+
+  (function animate(){
+    requestAnimationFrame(animate);
+    if(!down){ group.rotation.y += .0026; group.rotation.x += .0009; }
+    pulses.forEach(p=>{
+      p.t += p.s;
+      if(p.t>=1){ p.t=0; p.e=(Math.random()*edges.length)|0; }
+      const [a,b]=edges[p.e]; p.mesh.position.lerpVectors(a,b,p.t);
+    });
+    renderer.render(scene, camera);
+  })();
+})();
+</script>
+</body>
+</html>
